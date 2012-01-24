@@ -229,9 +229,10 @@ public abstract class AbstractOAuthConsumer implements OAuthConsumer {
     protected void collectBodyParameters(HttpRequest request, HttpParameters out)
             throws IOException {
 
-        // collect x-www-form-urlencoded body params
+        // collect x-www-form-urlencoded body params except when Request Method is PUT
         String contentType = request.getContentType();
-        if (contentType != null && contentType.startsWith(OAuth.FORM_ENCODED)) {
+        if (contentType != null && contentType.startsWith(OAuth.FORM_ENCODED)
+                && (request.getMethod() == null || !request.getMethod().equals("PUT"))) {
             InputStream payload = request.getMessagePayload();
             out.putAll(OAuth.decodeForm(payload), true);
         }
